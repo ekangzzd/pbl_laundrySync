@@ -98,15 +98,16 @@ CREATE TABLE laundryOrder_tbl (
     FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
 );
 
+-- MODIFIED PAYMENT TABLE
 CREATE TABLE payment_tbl (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     pickup_datetime DATETIME NOT NULL,
     payment_date DATE NOT NULL,
     payment_method ENUM('cash', 'online') NOT NULL,
-    payment_amount FLOAT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE additionalPayment_tbl (
     addcharges_id INT AUTO_INCREMENT PRIMARY KEY,
