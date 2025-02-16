@@ -1,0 +1,192 @@
+CREATE TABLE customer_tbl (
+    customer_id INT PRIMARY KEY,
+    fName VARCHAR(100) NOT NULL,
+    mName VARCHAR(100),
+    lName VARCHAR(100) NOT NULL,
+    suffix VARCHAR(10),
+    unit VARCHAR(50),
+    street VARCHAR(100) NOT NULL,
+    barangay VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    region VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    zipcode VARCHAR(10) NOT NULL,
+    contactEmail VARCHAR(100) NOT NULL,
+    contactNumber VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE login_tbl (
+    customer_id INT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
+);
+
+CREATE TABLE notifications_tbl (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    message VARCHAR(255),
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
+);
+
+CREATE TABLE laundryOrderStatus_tbl ( 
+    status_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status ENUM('pending', 'inProgress_washing', 'inProgress_drying', 'pending_addFee', 'pickupReady', 'completed', 'cancelled') NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
+);
+
+CREATE TABLE laundryService_tbl (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    washing ENUM('yes', 'no') NOT NULL,
+    drying ENUM('yes', 'no') NOT NULL,
+    serviceDesc VARCHAR(255)
+);
+
+CREATE TABLE washIntensity_tbl (
+    washIntensity_id INT AUTO_INCREMENT PRIMARY KEY,
+    intensity ENUM('light', 'medium', 'heavy') NOT NULL,
+    fixed_price FLOAT NOT NULL,
+    washIntDesc VARCHAR(255)
+);
+
+CREATE TABLE dryIntensity_tbl (
+    dryIntensity_id INT AUTO_INCREMENT PRIMARY KEY,
+    intensity ENUM('express', 'extra', 'extreme') NOT NULL,
+    fixed_price FLOAT NOT NULL,
+    dryIntDesc VARCHAR(255)
+);
+
+CREATE TABLE washLoad_tbl (
+    washSize_id INT AUTO_INCREMENT PRIMARY KEY,
+    size ENUM('small', 'medium', 'large') NOT NULL,
+    fixed_price FLOAT NOT NULL,
+    washSizeDesc VARCHAR(255)
+);
+
+CREATE TABLE dryLoad_tbl (
+    drySize_id INT AUTO_INCREMENT PRIMARY KEY,
+    size ENUM('small', 'medium', 'large') NOT NULL,
+    fixed_price FLOAT NOT NULL,
+    drySizeDesc VARCHAR(255)
+);
+
+CREATE TABLE laundryDetails_tbl (
+    details_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_id INT NOT NULL,
+    washIntensity_id INT NOT NULL,
+    washSize_id INT NOT NULL,
+    dryIntensity_id INT NOT NULL,
+    drySize_id INT NOT NULL,
+    FOREIGN KEY (service_id) REFERENCES laundryService_tbl(service_id) ON DELETE CASCADE,
+    FOREIGN KEY (washIntensity_id) REFERENCES washIntensity_tbl(washIntensity_id) ON DELETE CASCADE,
+    FOREIGN KEY (washSize_id) REFERENCES washLoad_tbl(washSize_id) ON DELETE CASCADE,
+    FOREIGN KEY (dryIntensity_id) REFERENCES dryIntensity_tbl(dryIntensity_id) ON DELETE CASCADE,
+    FOREIGN KEY (drySize_id) REFERENCES dryLoad_tbl(drySize_id) ON DELETE CASCADE
+);
+
+CREATE TABLE laundryOrder_tbl (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    details_id INT NOT NULL,
+    status_id INT NOT NULL,
+    orderDate DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (details_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
+);
+
+CREATE TABLE payment_tbl (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    pickup_datetime DATETIME NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_method ENUM('cash', 'online') NOT NULL,
+    payment_amount FLOAT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE
+);
+
+CREATE TABLE additionalPayment_tbl (
+    addcharges_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    prev_wash_size_id INT,
+    new_wash_size_id INT,
+    prev_dry_size_id INT,
+    new_dry_size_id INT,
+    additional_fee FLOAT,
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id),
+    FOREIGN KEY (prev_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
+    FOREIGN KEY (new_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
+    FOREIGN KEY (prev_dry_size_id) REFERENCES dryLoad_tbl(drySize_id),
+    FOREIGN KEY (new_dry_size_id) REFERENCES dryLoad_tbl(drySize_id)
+);
+
+
+
+-- customer_tbl
+INSERT INTO customer_tbl (customer_id, fName, mName, lName, suffix, unit, street, barangay, city, region, country, zipcode, contactEmail, contactNumber) 
+VALUES 
+(1, 'John', 'A', 'Doe', 'Jr.', 'Unit 101', 'Main St', 'Barangay 1', 'City A', 'Region X', 'Country Y', '12345', 'john.doe@example.com', '09123456789');
+
+-- login_tbl
+INSERT INTO login_tbl (customer_id, email, password) 
+VALUES 
+(1, 'john.doe@example.com', 'hashedpassword123');
+
+-- notifications_tbl
+INSERT INTO notifications_tbl (customer_id, created_at, message) 
+VALUES 
+(1, NOW(), 'Your order is ready for pickup.');
+
+-- laundryOrderStatus_tbl with all ENUM values
+INSERT INTO laundryOrderStatus_tbl (customer_id, status) VALUES 
+(1, 'pending');
+
+-- laundryService_tbl with all ENUM values
+INSERT INTO laundryService_tbl (washing, drying, serviceDesc) VALUES 
+('yes', 'yes', 'Full service wash and dry'),
+('yes', 'no', 'Wash only service'),
+('no', 'yes', 'Dry only service');
+
+-- washIntensity_tbl with all ENUM values
+INSERT INTO washIntensity_tbl (intensity, fixed_price, washIntDesc) VALUES 
+('light', 5.00, 'Light wash for delicate items'),
+('medium', 7.00, 'Medium wash for regular items'),
+('heavy', 10.00, 'Heavy wash for tough stains');
+
+-- dryIntensity_tbl with all ENUM values
+INSERT INTO dryIntensity_tbl (intensity, fixed_price, dryIntDesc) VALUES 
+('express', 5.00, 'Express dry in 30 minutes'),
+('extra', 7.00, 'Extra dry for thicker fabrics'),
+('extreme', 10.00, 'Extreme dry for heavy loads');
+
+-- washLoad_tbl with all ENUM values
+INSERT INTO washLoad_tbl (size, fixed_price, washSizeDesc) VALUES 
+('small', 5.00, 'Small load up to 5kg'),
+('medium', 7.00, 'Medium load up to 10kg'),
+('large', 10.00, 'Large load above 10kg');
+
+-- dryLoad_tbl with all ENUM values
+INSERT INTO dryLoad_tbl (size, fixed_price, drySizeDesc) VALUES 
+('small', 5.00, 'Small load up to 5kg'),
+('medium', 7.00, 'Medium load up to 10kg'),
+('large', 10.00, 'Large load above 10kg');
+
+-- laundryDetails_tbl
+INSERT INTO laundryDetails_tbl (service_id, washIntensity_id, washSize_id, dryIntensity_id, drySize_id) VALUES 
+(1, 1, 1, 1, 1);
+
+-- laundryOrder_tbl
+INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VALUES 
+(1, 1, 1, CURDATE());
+
+-- payment_tbl with all ENUM values
+INSERT INTO payment_tbl (order_id, pickup_datetime, payment_date, payment_method, payment_amount) VALUES 
+(1, NOW(), CURDATE(), 'cash', 20.00),
+(1, NOW(), CURDATE(), 'online', 20.00);
+
+-- additionalPayment_tbl
+INSERT INTO additionalPayment_tbl (order_id, prev_wash_size_id, new_wash_size_id, prev_dry_size_id, new_dry_size_id, additional_fee) VALUES 
+(1, 1, 2, 1, 2, 5.00);
