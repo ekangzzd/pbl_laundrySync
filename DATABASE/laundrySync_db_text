@@ -185,7 +185,6 @@ INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VAL
 -- payment_tbl with all ENUM values
 INSERT INTO payment_tbl (order_id, pickup_datetime, payment_date, payment_method, payment_amount) VALUES 
 (1, NOW(), CURDATE(), 'cash', 20.00),
-(1, NOW(), CURDATE(), 'online', 20.00);
 
 -- additionalPayment_tbl
 INSERT INTO additionalPayment_tbl (order_id, prev_wash_size_id, new_wash_size_id, prev_dry_size_id, new_dry_size_id, additional_fee) VALUES 
