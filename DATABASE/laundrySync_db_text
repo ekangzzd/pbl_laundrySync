@@ -190,35 +190,35 @@ INSERT INTO dryIntensity_tbl (intensity, fixed_price, dryIntDesc) VALUES
 -- MODIFIED: INSERT LOADS
 -- Wash Load Inserts
 INSERT INTO washLoad_tbl (size, fixed_price, washSizeDesc, washIntensity_id) VALUES
-('small', 5.00, 'Small load up to 5kg', 1), -- light
-('medium', 7.00, 'Medium load up to 10kg', 1), -- light
-('large', 10.00, 'Large load above 10kg', 1), -- light
-('small', 6.00, 'Small load up to 5kg', 2), -- medium
-('medium', 8.00, 'Medium load up to 10kg', 2), -- medium
-('large', 11.00, 'Large load above 10kg', 2), -- medium
-('small', 7.00, 'Small load up to 5kg', 3), -- heavy
-('medium', 9.00, 'Medium load up to 10kg', 3), -- heavy
-('large', 12.00, 'Large load above 10kg', 3); -- heavy
+('small', 5.00, 'Small load up to 5kg', 1),
+('medium', 7.00, 'Medium load up to 10kg', 1),
+('large', 10.00, 'Large load above 10kg', 1),
+('small', 6.00, 'Small load up to 5kg', 2),
+('medium', 8.00, 'Medium load up to 10kg', 2),
+('large', 11.00, 'Large load above 10kg', 2),
+('small', 7.00, 'Small load up to 5kg', 3),
+('medium', 9.00, 'Medium load up to 10kg', 3),
+('large', 12.00, 'Large load above 10kg', 3);
 
 -- Dry Load Inserts
 INSERT INTO dryLoad_tbl (size, fixed_price, drySizeDesc, dryIntensity_id) VALUES
-('small', 5.00, 'Small load up to 5kg', 1), -- express
-('medium', 7.00, 'Medium load up to 10kg', 1), -- express
-('large', 10.00, 'Large load above 10kg', 1), -- express
-('small', 6.00, 'Small load up to 5kg', 2), -- extra
-('medium', 8.00, 'Medium load up to 10kg', 2), -- extra
-('large', 11.00, 'Large load above 10kg', 2), -- extra
-('small', 7.00, 'Small load up to 5kg', 3), -- extreme
-('medium', 9.00, 'Medium load up to 10kg', 3), -- extreme
-('large', 12.00, 'Large load above 10kg', 3); -- extreme
+('small', 5.00, 'Small load up to 5kg', 1),
+('medium', 7.00, 'Medium load up to 10kg', 1),
+('large', 10.00, 'Large load above 10kg', 1),
+('small', 6.00, 'Small load up to 5kg', 2),
+('medium', 8.00, 'Medium load up to 10kg', 2),
+('large', 11.00, 'Large load above 10kg', 2),
+('small', 7.00, 'Small load up to 5kg', 3),
+('medium', 9.00, 'Medium load up to 10kg', 3),
+('large', 12.00, 'Large load above 10kg', 3);
 
--- laundryDetails_tbl
-INSERT INTO laundryDetails_tbl (service_id, washIntensity_id, washSize_id, dryIntensity_id, drySize_id) VALUES 
-(1, 1, 1, 1, 1), 
-(2, 2, 2, NULL, NULL), 
-(3, NULL, NULL, 3, 3), 
-(1, 1, 3, 1, 3),
-(2, 3, 1, NULL, NULL);
+-- MODIFIED: INSERT DETAILS
+INSERT INTO laundryDetails_tbl (customer_id, service_id, washSize_id, drySize_id) VALUES 
+(1, 1, 1, 1), 
+(2, 2, 2, NULL),
+(3, 3, NULL, 3),
+(4, 1, 3, 3),
+(5, 2, 1, NULL);
 
 -- laundryOrder_tbl
 INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VALUES 
@@ -239,8 +239,8 @@ VALUES
 
 -- additionalPayment_tbl
 INSERT INTO additionalPayment_tbl (order_id, prev_wash_size_id, new_wash_size_id, prev_dry_size_id, new_dry_size_id, additional_fee) VALUES 
-(1, 1, 2, 1, 2, 5.00),
-(2, 2, 3, 2, 3, 7.00),
-(3, 1, 3, 1, 2, 10.00),
-(4, 2, 2, 1, 3, 6.50),
-(5, 1, 2, 2, 2, 5.75);
+(1, 1, 2, 1, 2, 6.00), 
+(2, 2, 3, 2, 3, 10.00),
+(3, 1, 3, 1, 2, 12.00),
+(4, 2, 2, 1, 3, 9.00),
+(5, 1, 2, 2, 2, 7.00);
