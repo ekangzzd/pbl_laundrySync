@@ -45,6 +45,7 @@ CREATE TABLE laundryService_tbl (
     serviceDesc VARCHAR(255)
 );
 
+-- MODIFIED LOADS AND INTENSITIES
 CREATE TABLE washIntensity_tbl (
     washIntensity_id INT AUTO_INCREMENT PRIMARY KEY,
     intensity ENUM('light', 'medium', 'heavy') NOT NULL,
@@ -63,15 +64,20 @@ CREATE TABLE washLoad_tbl (
     washSize_id INT AUTO_INCREMENT PRIMARY KEY,
     size ENUM('small', 'medium', 'large') NOT NULL,
     fixed_price FLOAT NOT NULL,
-    washSizeDesc VARCHAR(255)
+    washSizeDesc VARCHAR(255),
+    washIntensity_id INT NOT NULL,
+    FOREIGN KEY (washIntensity_id) REFERENCES washIntensity_tbl(washIntensity_id) ON DELETE CASCADE
 );
 
 CREATE TABLE dryLoad_tbl (
     drySize_id INT AUTO_INCREMENT PRIMARY KEY,
     size ENUM('small', 'medium', 'large') NOT NULL,
     fixed_price FLOAT NOT NULL,
-    drySizeDesc VARCHAR(255)
+    drySizeDesc VARCHAR(255),
+    dryIntensity_id INT NOT NULL,
+    FOREIGN KEY (dryIntensity_id) REFERENCES dryIntensity_tbl(dryIntensity_id) ON DELETE CASCADE
 );
+
 
 -- MODIFIED: ALLOW NULL VALUES
 CREATE TABLE laundryDetails_tbl (
