@@ -2,7 +2,7 @@
 CREATE TABLE customer_tbl (
     customer_id INT PRIMARY KEY AUTO_INCREMENT,
     fName VARCHAR(100) NOT NULL,
-    mName VARCHAR(100),
+    mName VARCHAR(100) NULL,
     lName VARCHAR(100) NOT NULL,
     suffix ENUM('Jr.', 'Sr.', 'II', 'III', 'IV') NULL,
     unit VARCHAR(50),
@@ -88,43 +88,26 @@ CREATE TABLE laundryOrder_tbl (
     FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
 );
 
--- Payment Table
+-- Payment Table:
 CREATE TABLE payment_tbl (
-    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     pickup_datetime DATETIME NOT NULL,
-    payment_date DATE NOT NULL,
-    payment_method ENUM('cash', 'online') NOT NULL,
-    total_price FLOAT NOT NULL,
-    total_price_add FLOAT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE
-);
-
--- Additional Payment Table
-CREATE TABLE additionalPayment_tbl (
-    addcharges_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    prev_wash_size_id INT,
-    new_wash_size_id INT,
-    prev_dry_size_id INT,
-    new_dry_size_id INT,
-    additional_fee FLOAT,
-    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id),
-    FOREIGN KEY (prev_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
-    FOREIGN KEY (new_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
-    FOREIGN KEY (prev_dry_size_id) REFERENCES dryLoad_tbl(drySize_id),
-    FOREIGN KEY (new_dry_size_id) REFERENCES dryLoad_tbl(drySize_id)
+    payment_method ENUM('cash', 'credit', 'debit', 'online') NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    updated_details_id INT DEFAULT NULL,
+    additional_price DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    total_payment DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (updated_details_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE SET NULL
 );
 
 -- Customer Inserts
 INSERT INTO customer_tbl (fName, mName, lName, suffix, unit, street, barangay, city, region, country, zipcode, contactEmail, contactNumber) VALUES
 ('John', 'A.', 'Doe', NULL, '12A', 'Main St.', 'Barangay 1', 'Metro City', 'Region 1', 'CountryX', '1000', 'john.doe@email.com', '09123456789'),
 ('Jane', 'B.', 'Smith', 'Jr.', '5B', '2nd Ave.', 'Barangay 2', 'Metro City', 'Region 1', 'CountryX', '1001', 'jane.smith@email.com', '09876543210');
-
--- Customer Inserts
-INSERT INTO customer_tbl (fName, mName, lName, suffix, unit, street, barangay, city, region, country, zipcode, contactEmail, contactNumber) VALUES
-('John', 'Doe', 'Smith', 'Jr.', 'Unit 1', '123 Main St', 'Barangay 1', 'Metro City', 'Region 1', 'Country A', '1001', 'john.doe@example.com', '09123456789'),
-('Jane', 'Marie', 'Doe', 'Sr.', 'Unit 2', '456 Oak St', 'Barangay 2', 'Metro City', 'Region 1', 'Country A', '1002', 'jane.doe@example.com', '09234567890');
 
 -- Login Inserts
 INSERT INTO login_tbl (customer_id, username, password_hash) VALUES
@@ -139,9 +122,13 @@ INSERT INTO notifications_tbl (customer_id, message, status) VALUES
 -- Laundry Order Status Inserts
 INSERT INTO laundryOrderStatus_tbl (status_name) VALUES
 ('Pending'),
-('Processing'),
-('Completed'),
-('Canceled');
+('Washing'),
+('Drying'),
+('Drying'),
+('Pickup Ready'),
+('Cancelled'),
+('Pending Fee'),
+('Completed');
 
 -- Laundry Service Inserts
 INSERT INTO laundryService_tbl (service_name, service_desc) VALUES
@@ -237,13 +224,39 @@ INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VAL
 (1, 1, 2, '2025-02-24'),
 (2, 2, 3, '2025-02-23');
 
--- Payment Inserts
-INSERT INTO payment_tbl (order_id, pickup_datetime, payment_date, payment_method, total_price, total_price_add) VALUES
-(1, '2025-02-24 14:00:00', '2025-02-24', 'cash', 20.00, 2.00),
-(2, '2025-02-24 16:00:00', '2025-02-24', 'online', 25.00, 3.00);
+-- INITIAL PAYMENT INSERT (IF NO ADDITIONAL PAYMENT)
+INSERT INTO payment_tbl (order_id, pickup_datetime, payment_method, total_price, additional_price, total_payment, updated_details_id)
+SELECT
+    o.order_id,
+    '2025-02-25 10:00:00' AS pickup_datetime,  -- Example datetime
+    'cash' AS payment_method,
+    (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) AS total_price,
+    0.00 AS additional_price,  -- No additional price at first
+    (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) AS total_payment, -- Initially the same as total_price
+    NULL AS updated_details_id  -- No update yet
+FROM laundryOrder_tbl o
+JOIN laundryDetails_tbl ld1 ON o.details_id = ld1.details_id
+LEFT JOIN washLoad_tbl w1 ON ld1.washLoad_id = w1.washLoad_id
+LEFT JOIN dryLoad_tbl d1 ON ld1.dryLoad_id = d1.dryLoad_id
+WHERE o.order_id = 1;  -- Only for the first order
 
--- Additional Payment Inserts
-INSERT INTO additionalPayment_tbl (order_id, prev_wash_size_id, new_wash_size_id, prev_dry_size_id, new_dry_size_id, additional_fee) VALUES
-(1, 1, 2, 3, 3, 2.00),
-(2, 2, 3, 1, 2, 3.00);
+-- Updating updated_details_id When the Order is Modified
+UPDATE payment_tbl
+SET updated_details_id = 5  -- Example new details_id
+WHERE order_id = 1;
 
+-- Recalculating total_payment After Update
+UPDATE payment_tbl p
+JOIN laundryOrder_tbl o ON p.order_id = o.order_id
+JOIN laundryDetails_tbl ld1 ON o.details_id = ld1.details_id -- Original details
+LEFT JOIN washLoad_tbl w1 ON ld1.washLoad_id = w1.washLoad_id
+LEFT JOIN dryLoad_tbl d1 ON ld1.dryLoad_id = d1.dryLoad_id
+LEFT JOIN laundryDetails_tbl ld2 ON p.updated_details_id = ld2.details_id -- New details
+LEFT JOIN washLoad_tbl w2 ON ld2.washLoad_id = w2.washLoad_id
+LEFT JOIN dryLoad_tbl d2 ON ld2.dryLoad_id = d2.dryLoad_id
+SET
+    p.total_price = COALESCE(w1.price, 0) + COALESCE(d1.price, 0),
+    p.additional_price = GREATEST(0, (COALESCE(w2.price, 0) + COALESCE(d2.price, 0)) - (COALESCE(w1.price, 0) + COALESCE(d1.price, 0))),
+    p.total_payment = (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) +
+                      GREATEST(0, (COALESCE(w2.price, 0) + COALESCE(d2.price, 0)) - (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)))
+WHERE p.order_id = 1;
