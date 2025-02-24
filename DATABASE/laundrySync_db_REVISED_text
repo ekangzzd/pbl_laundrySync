@@ -69,15 +69,11 @@ CREATE TABLE dryLoad_tbl (
 CREATE TABLE laundryDetails_tbl (
     details_id INT PRIMARY KEY AUTO_INCREMENT,
     service_id INT NOT NULL,
-    washIntensity_id INT NULL,
-    washSize_id INT NULL,
-    dryIntensity_id INT NULL,
-    drySize_id INT NULL,
+    washLoad_id INT NULL,
+    dryLoad_id INT NULL,
     FOREIGN KEY (service_id) REFERENCES laundryService_tbl(service_id) ON DELETE CASCADE,
-    FOREIGN KEY (washIntensity_id) REFERENCES washIntensity_tbl(washIntensity_id) ON DELETE CASCADE,
-    FOREIGN KEY (washSize_id) REFERENCES washLoad_tbl(washSize_id) ON DELETE CASCADE,
-    FOREIGN KEY (dryIntensity_id) REFERENCES dryIntensity_tbl(dryIntensity_id) ON DELETE CASCADE,
-    FOREIGN KEY (drySize_id) REFERENCES dryLoad_tbl(drySize_id) ON DELETE CASCADE
+    FOREIGN KEY (washLoad_id) REFERENCES washLoad_tbl(washLoad_id) ON DELETE CASCADE,
+    FOREIGN KEY (dryLoad_id) REFERENCES dryLoad_tbl(dryLoad_id) ON DELETE CASCADE
 );
 
 -- Laundry Order Table
@@ -143,8 +139,9 @@ INSERT INTO laundryOrderStatus_tbl (status_name) VALUES
 
 -- Laundry Service Inserts
 INSERT INTO laundryService_tbl (service_name, service_desc) VALUES
-('Washing', 'Standard washing service'),
-('Dry Cleaning', 'Professional dry cleaning');
+('Washing Only', 'Standard washing service without drying'),
+('Drying Only', 'Standard drying service without washing'),
+('Full Service', 'Washing and drying service');
 
 -- Wash Load Inserts
 INSERT INTO washLoad_tbl (size, intensity, description, price) VALUES
