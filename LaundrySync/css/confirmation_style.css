@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: url('../assets/images/laundry_bg.png') no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto 1rem;
+    width: 200px;
+    height: auto;
+}
+
+.container {
+    background: #0170BF;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.check {
+    width: 100px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 28px;
+}
+
+p {
+    color: white;
+    margin-bottom: 2rem;
+    font-size: 16px;
+}
+
+a.back-to-login {
+    display: inline-block;
+    width: 100%;
+    padding: 0.7rem;
+    background: #FCB22D;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin-top: 0.7rem;
+    transition: background 0.3s ease;
+}
+
+a.back-to-login:hover {
+    background: #a38348;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+}
+
+.progress-container {
+    width: 100%;
+    margin-top: -0.2rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    display: flex;
+    height: 5px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: lightgray;
+}
+
+.progress-step {
+    flex: 1;
+    background-color: lightgray;
+    border-radius: 5px;
+}
+
+.progress-step.completed {
+    background-color: #FCB22D;
+}
