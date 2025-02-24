@@ -1,1 +1,110 @@
+[ CREATE QUERIES ]
+
+-- Customer Table
+CREATE TABLE customer_tbl (
+    customerId INT PRIMARY KEY AUTO_INCREMENT,
+    fName VARCHAR(100) NOT NULL,
+    mName VARCHAR(100) NULL,
+    lName VARCHAR(100) NOT NULL,
+    suffix ENUM('Jr.', 'Sr.', 'II', 'III', 'IV') NULL,
+    unit VARCHAR(50),
+    street VARCHAR(100) NOT NULL,
+    barangay VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    region VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    zipCode VARCHAR(10) NOT NULL,
+    contactEmail VARCHAR(100) NOT NULL UNIQUE,
+    contactNumber VARCHAR(20) NOT NULL
+);
+
+-- Login Table
+CREATE TABLE login_tbl (
+    loginId INT PRIMARY KEY AUTO_INCREMENT,
+    customerId INT NOT NULL,
+    contactEmail VARCHAR(100) NOT NULL UNIQUE,
+    passwordHash VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE
+);
+
+-- Notifications Table
+CREATE TABLE notifications_tbl (
+    notificationId INT PRIMARY KEY AUTO_INCREMENT,
+    customerId INT NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('unread', 'read') DEFAULT 'unread',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE
+);
+
+-- Laundry Order Status Table
+CREATE TABLE laundryOrderStatus_tbl (
+    statusId INT PRIMARY KEY AUTO_INCREMENT,
+    statusName VARCHAR(50) NOT NULL
+);
+
+-- Laundry Service Table
+CREATE TABLE laundryService_tbl (
+    serviceId INT PRIMARY KEY AUTO_INCREMENT,
+    serviceName VARCHAR(100) NOT NULL,
+    serviceDesc TEXT
+);
+
+-- Wash Load Table
+CREATE TABLE washLoad_tbl (
+    washLoadId INT PRIMARY KEY AUTO_INCREMENT,
+    size ENUM('small', 'medium', 'large') NOT NULL,
+    intensity ENUM('light', 'medium', 'heavy') NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price FLOAT NOT NULL
+);
+
+-- Dry Load Table
+CREATE TABLE dryLoad_tbl (
+    dryLoadId INT PRIMARY KEY AUTO_INCREMENT,
+    size ENUM('medium', 'large') NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price FLOAT NOT NULL
+);
+
+-- Laundry Details Table
+CREATE TABLE laundryDetails_tbl (
+    detailsId INT PRIMARY KEY AUTO_INCREMENT,
+    serviceId INT NOT NULL,
+    washLoadId INT NULL,
+    dryLoadId INT NULL,
+    FOREIGN KEY (serviceId) REFERENCES laundryService_tbl(serviceId) ON DELETE CASCADE,
+    FOREIGN KEY (washLoadId) REFERENCES washLoad_tbl(washLoadId) ON DELETE CASCADE,
+    FOREIGN KEY (dryLoadId) REFERENCES dryLoad_tbl(dryLoadId) ON DELETE CASCADE
+);
+
+-- Laundry Order Table
+CREATE TABLE laundryOrder_tbl (
+    orderId INT PRIMARY KEY AUTO_INCREMENT,
+    customerId INT NOT NULL,
+    detailsId INT NOT NULL,
+    statusId INT NOT NULL,
+    orderDate DATE NOT NULL,
+    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE,
+    FOREIGN KEY (detailsId) REFERENCES laundryDetails_tbl(detailsId) ON DELETE CASCADE,
+    FOREIGN KEY (statusId) REFERENCES laundryOrderStatus_tbl(statusId) ON DELETE CASCADE
+);
+
+-- Payment Table
+CREATE TABLE payment_tbl (
+    paymentId INT AUTO_INCREMENT PRIMARY KEY,
+    orderId INT NOT NULL,
+    pickupDatetime DATETIME NOT NULL,
+    paymentMethod ENUM('cash', 'credit', 'debit', 'online') NOT NULL,
+    totalPrice DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    updatedDetailsId INT DEFAULT NULL,
+    additionalPrice DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    totalPayment DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (orderId) REFERENCES laundryOrder_tbl(orderId) ON DELETE CASCADE,
+    FOREIGN KEY (updatedDetailsId) REFERENCES laundryDetails_tbl(detailsId) ON DELETE SET NULL
+);
+
+[ INSERT QUERIES ] 
 
