@@ -140,6 +140,15 @@ button a:hover {
     transition: color 0.3s ease;
 }
 
+.register-link a {
+    color: #FFFFFF;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #FCB22D;
+}
+
 @media (max-width: 480px) {
     .login-container {
         width: 95%;
