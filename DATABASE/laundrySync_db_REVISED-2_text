@@ -107,3 +107,159 @@ CREATE TABLE payment_tbl (
 );
 
 [ INSERT QUERIES ]
+-- Customer Inserts
+INSERT INTO customer_tbl (fName, mName, lName, suffix, unit, street, barangay, city, region, country, zipCode, contactEmail, contactNumber) VALUES
+('John', 'A.', 'Doe', NULL, '12A', 'Main St.', 'Barangay 1', 'Metro City', 'Region 1', 'CountryX', '1000', 'john.doe@email.com', '09123456789'),
+('Jane', 'B.', 'Smith', 'Jr.', '5B', '2nd Ave.', 'Barangay 2', 'Metro City', 'Region 1', 'CountryX', '1001', 'jane.smith@email.com', '09876543210');
+
+-- Login Inserts
+INSERT INTO login_tbl (customer_id, contactEmail, passwordHash) VALUES
+(1, 'john.doe@email.com', 'hashedpassword1'),
+(2, 'jane.smith@email.com', 'hashedpassword2');
+
+-- Notifications Inserts
+INSERT INTO notifications_tbl (customer_id, message, status) VALUES
+(1, 'Your order has been processed.', 'unread'),
+(2, 'Your order is ready for pickup.', 'read');
+
+-- Laundry Order Status Inserts
+INSERT INTO laundryOrderStatus_tbl (statusName) VALUES
+('Pending'),
+('Washing'),
+('Drying'),
+('Drying'),
+('Pickup Ready'),
+('Cancelled'),
+('Pending Fee'),
+('Completed');
+
+-- Laundry Service Inserts
+INSERT INTO laundryService_tbl (serviceName, serviceDesc) VALUES
+('Washing Only', 'Standard washing service without drying'),
+('Drying Only', 'Standard drying service without washing'),
+('Full Service', 'Washing and drying service');
+
+-- Wash Load Inserts
+INSERT INTO washLoad_tbl (size, intensity, description, price) VALUES
+('small', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 60.00),
+('medium', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 85.00),
+('large', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 120.00),
+('small', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 70.00),
+('medium', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 95.00),
+('large', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 130.00),
+('small', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 80.00),
+('medium', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 105.00),
+('large', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 140.00);
+
+-- Dry Load Inserts
+INSERT INTO dryLoad_tbl (size, description, price) VALUES
+('medium', 'Standard Drying', 65.00),
+('large', 'Standard Drying', 100.00);
+
+-- Laundry Details (WITH COMMENTS)
+-- Laundry Details Inserts with All Combinations
+INSERT INTO laundryDetails_tbl (service_id, washLoad_id, dryLoad_id) VALUES
+(1, 1, NULL),  -- Washing Only, small wash load
+(1, 2, NULL),  -- Washing Only, medium wash load
+(1, 3, NULL),  -- Washing Only, large wash load
+(1, 4, NULL),  -- Washing Only, small wash load, medium intensity
+(1, 5, NULL),  -- Washing Only, medium wash load, medium intensity
+(1, 6, NULL),  -- Washing Only, large wash load, medium intensity
+(1, 7, NULL),  -- Washing Only, small wash load, heavy intensity
+(1, 8, NULL),  -- Washing Only, medium wash load, heavy intensity
+(1, 9, NULL),  -- Washing Only, large wash load, heavy intensity
+(2, NULL, 1),  -- Drying Only, medium dry load
+(2, NULL, 2),  -- Drying Only, large dry load
+(3, 1, 1),     -- Full Service, small wash load, medium dry load
+(3, 1, 2),     -- Full Service, small wash load, large dry load
+(3, 2, 1),     -- Full Service, medium wash load, medium dry load
+(3, 2, 2),     -- Full Service, medium wash load, large dry load
+(3, 3, 1),     -- Full Service, large wash load, medium dry load
+(3, 3, 2),     -- Full Service, large wash load, large dry load
+(3, 4, 1),     -- Full Service, small wash load, medium intensity, medium dry load
+(3, 4, 2),     -- Full Service, small wash load, medium intensity, large dry load
+(3, 5, 1),     -- Full Service, medium wash load, medium intensity, medium dry load
+(3, 5, 2),     -- Full Service, medium wash load, medium intensity, large dry load
+(3, 6, 1),     -- Full Service, large wash load, medium intensity, medium dry load
+(3, 6, 2),     -- Full Service, large wash load, medium intensity, large dry load
+(3, 7, 1),     -- Full Service, small wash load, heavy intensity, medium dry load
+(3, 7, 2),     -- Full Service, small wash load, heavy intensity, large dry load
+(3, 8, 1),     -- Full Service, medium wash load, heavy intensity, medium dry load
+(3, 8, 2),     -- Full Service, medium wash load, heavy intensity, large dry load
+(3, 9, 1),     -- Full Service, large wash load, heavy intensity, medium dry load
+(3, 9, 2);     -- Full Service, large wash load, heavy intensity, large dry load
+
+-- WITHOUT COMMENTS
+-- Laundry Details Inserts with All Combinations
+INSERT INTO laundryDetails_tbl (service_id, washLoad_id, dryLoad_id) VALUES
+(1, 1, NULL),
+(1, 2, NULL),
+(1, 3, NULL),
+(1, 4, NULL),
+(1, 5, NULL),
+(1, 6, NULL),
+(1, 7, NULL),
+(1, 8, NULL),
+(1, 9, NULL),
+(2, NULL, 1),
+(2, NULL, 2),
+(3, 1, 1),
+(3, 1, 2),
+(3, 2, 1),
+(3, 2, 2),
+(3, 3, 1),
+(3, 3, 2),
+(3, 4, 1),
+(3, 4, 2),
+(3, 5, 1),
+(3, 5, 2),
+(3, 6, 1),
+(3, 6, 2),
+(3, 7, 1),
+(3, 7, 2),
+(3, 8, 1),
+(3, 8, 2),
+(3, 9, 1),
+(3, 9, 2);
+
+-- Laundry Order Inserts
+INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VALUES
+(1, 1, 2, '2025-02-24'),
+(2, 2, 3, '2025-02-23');
+
+-- INITIAL PAYMENT INSERT (IF NO ADDITIONAL PAYMENT)
+INSERT INTO payment_tbl (order_id, pickupDatetime, paymentMethod, totalPrice, additionalPrice, totalPayment, updatedDetails_id)
+SELECT
+    o.order_id,
+    '2025-02-25 10:00:00' AS pickupDatetime,  -- Corrected column name
+    'cash' AS paymentMethod,  -- Corrected column name
+    (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) AS totalPrice,  -- Corrected column name
+    0.00 AS additionalPrice,  -- Corrected column name
+    (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) AS totalPayment,  -- Corrected column name
+    NULL AS updatedDetails_id  -- No update yet
+FROM laundryOrder_tbl o
+JOIN laundryDetails_tbl ld1 ON o.details_id = ld1.details_id
+LEFT JOIN washLoad_tbl w1 ON ld1.washLoad_id = w1.washLoad_id
+LEFT JOIN dryLoad_tbl d1 ON ld1.dryLoad_id = d1.dryLoad_id
+WHERE o.order_id = 1;  -- Only for the first order
+
+-- Updating updatedDetails_id When the Order is Modified
+UPDATE payment_tbl
+SET updatedDetails_id = 5  -- Example new details_id
+WHERE order_id = 1;
+
+-- Recalculating totalPayment After Update
+UPDATE payment_tbl p
+JOIN laundryOrder_tbl o ON p.order_id = o.order_id
+JOIN laundryDetails_tbl ld1 ON o.details_id = ld1.details_id -- Original details
+LEFT JOIN washLoad_tbl w1 ON ld1.washLoad_id = w1.washLoad_id
+LEFT JOIN dryLoad_tbl d1 ON ld1.dryLoad_id = d1.dryLoad_id
+LEFT JOIN laundryDetails_tbl ld2 ON p.updatedDetails_id = ld2.details_id -- New details
+LEFT JOIN washLoad_tbl w2 ON ld2.washLoad_id = w2.washLoad_id
+LEFT JOIN dryLoad_tbl d2 ON ld2.dryLoad_id = d2.dryLoad_id
+SET
+    p.totalPrice = COALESCE(w1.price, 0) + COALESCE(d1.price, 0),  -- Corrected column name
+    p.additionalPrice = GREATEST(0, (COALESCE(w2.price, 0) + COALESCE(d2.price, 0)) - (COALESCE(w1.price, 0) + COALESCE(d1.price, 0))),  -- Corrected column name
+    p.totalPayment = (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)) +
+                      GREATEST(0, (COALESCE(w2.price, 0) + COALESCE(d2.price, 0)) - (COALESCE(w1.price, 0) + COALESCE(d1.price, 0)))  -- Corrected column name
+WHERE p.order_id = 1;
