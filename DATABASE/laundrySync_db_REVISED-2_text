@@ -2,7 +2,7 @@
 
 -- Customer Table
 CREATE TABLE customer_tbl (
-    customerId INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
     fName VARCHAR(100) NOT NULL,
     mName VARCHAR(100) NULL,
     lName VARCHAR(100) NOT NULL,
@@ -20,39 +20,39 @@ CREATE TABLE customer_tbl (
 
 -- Login Table
 CREATE TABLE login_tbl (
-    loginId INT PRIMARY KEY AUTO_INCREMENT,
-    customerId INT NOT NULL,
+    login_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
     contactEmail VARCHAR(100) NOT NULL UNIQUE,
     passwordHash VARCHAR(255) NOT NULL,
-    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
 );
 
 -- Notifications Table
 CREATE TABLE notifications_tbl (
-    notificationId INT PRIMARY KEY AUTO_INCREMENT,
-    customerId INT NOT NULL,
+    notification_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
     message TEXT NOT NULL,
     status ENUM('unread', 'read') DEFAULT 'unread',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
 );
 
 -- Laundry Order Status Table
 CREATE TABLE laundryOrderStatus_tbl (
-    statusId INT PRIMARY KEY AUTO_INCREMENT,
+    status_id INT PRIMARY KEY AUTO_INCREMENT,
     statusName VARCHAR(50) NOT NULL
 );
 
 -- Laundry Service Table
 CREATE TABLE laundryService_tbl (
-    serviceId INT PRIMARY KEY AUTO_INCREMENT,
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
     serviceName VARCHAR(100) NOT NULL,
     serviceDesc TEXT
 );
 
 -- Wash Load Table
 CREATE TABLE washLoad_tbl (
-    washLoadId INT PRIMARY KEY AUTO_INCREMENT,
+    washLoad_id INT PRIMARY KEY AUTO_INCREMENT,
     size ENUM('small', 'medium', 'large') NOT NULL,
     intensity ENUM('light', 'medium', 'heavy') NOT NULL,
     description VARCHAR(255) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE washLoad_tbl (
 
 -- Dry Load Table
 CREATE TABLE dryLoad_tbl (
-    dryLoadId INT PRIMARY KEY AUTO_INCREMENT,
+    dryLoad_id INT PRIMARY KEY AUTO_INCREMENT,
     size ENUM('medium', 'large') NOT NULL,
     description VARCHAR(255) NOT NULL,
     price FLOAT NOT NULL
@@ -69,42 +69,41 @@ CREATE TABLE dryLoad_tbl (
 
 -- Laundry Details Table
 CREATE TABLE laundryDetails_tbl (
-    detailsId INT PRIMARY KEY AUTO_INCREMENT,
-    serviceId INT NOT NULL,
-    washLoadId INT NULL,
-    dryLoadId INT NULL,
-    FOREIGN KEY (serviceId) REFERENCES laundryService_tbl(serviceId) ON DELETE CASCADE,
-    FOREIGN KEY (washLoadId) REFERENCES washLoad_tbl(washLoadId) ON DELETE CASCADE,
-    FOREIGN KEY (dryLoadId) REFERENCES dryLoad_tbl(dryLoadId) ON DELETE CASCADE
+    details_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_id INT NOT NULL,
+    washLoad_id INT NULL,
+    dryLoad_id INT NULL,
+    FOREIGN KEY (service_id) REFERENCES laundryService_tbl(service_id) ON DELETE CASCADE,
+    FOREIGN KEY (washLoad_id) REFERENCES washLoad_tbl(washLoad_id) ON DELETE CASCADE,
+    FOREIGN KEY (dryLoad_id) REFERENCES dryLoad_tbl(dryLoad_id) ON DELETE CASCADE
 );
 
 -- Laundry Order Table
 CREATE TABLE laundryOrder_tbl (
-    orderId INT PRIMARY KEY AUTO_INCREMENT,
-    customerId INT NOT NULL,
-    detailsId INT NOT NULL,
-    statusId INT NOT NULL,
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    details_id INT NOT NULL,
+    status_id INT NOT NULL,
     orderDate DATE NOT NULL,
-    FOREIGN KEY (customerId) REFERENCES customer_tbl(customerId) ON DELETE CASCADE,
-    FOREIGN KEY (detailsId) REFERENCES laundryDetails_tbl(detailsId) ON DELETE CASCADE,
-    FOREIGN KEY (statusId) REFERENCES laundryOrderStatus_tbl(statusId) ON DELETE CASCADE
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (details_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
 );
 
 -- Payment Table
 CREATE TABLE payment_tbl (
-    paymentId INT AUTO_INCREMENT PRIMARY KEY,
-    orderId INT NOT NULL,
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
     pickupDatetime DATETIME NOT NULL,
     paymentMethod ENUM('cash', 'credit', 'debit', 'online') NOT NULL,
     totalPrice DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
-    updatedDetailsId INT DEFAULT NULL,
+    updatedDetails_id INT DEFAULT NULL,
     additionalPrice DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
     totalPayment DECIMAL(10,2) NOT NULL DEFAULT 0.00, 
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (orderId) REFERENCES laundryOrder_tbl(orderId) ON DELETE CASCADE,
-    FOREIGN KEY (updatedDetailsId) REFERENCES laundryDetails_tbl(detailsId) ON DELETE SET NULL
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (updatedDetails_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE SET NULL
 );
 
-[ INSERT QUERIES ] 
-
+[ INSERT QUERIES ]
