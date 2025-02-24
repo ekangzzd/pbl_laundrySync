@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="..\css\registration1_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form class="form" action="login.html" method="GET">
+             <img src="..\assets\images\logo.png" alt="Logo" class="logo">
+            <h2>Create an account</h2>
+            <p id="step-indicator">Step 1 of 3: Personal Information</p>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-step completed"></div>
+                    <div class="progress-step"></div>
+                    <div class="progress-step"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input type="text" id="firstname" name="firstname" class="input-field" required placeholder="Enter your first name">
+            </div>
+
+            <div class="form-group">
+                <label for="middlename">Middle Name</label>
+                <input type="text" id="middlename" name="middlename" class="input-field" required placeholder="Enter your middle name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname" name="lastname" class="input-field" required placeholder="Enter your last name">
+            </div>
+
+            <div class="form-group">
+                <label for="suffix">Suffix</label>
+                <select id="suffix" name="suffix" class="input-field" required>
+                    <option value="" disabled selected>Please select</option>
+                    <option value="Jr.">Jr.</option>
+                    <option value="Sr.">Sr.</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="contact-number">Contact Number</label>
+                <input type="text" id="contact-number" name="contact-number" class="input-field" required placeholder="Enter your contact number">
+            </div>
+
+            <button type="button"><a href="registration2.html">Continue</a></button>
+
+            <p class="register-link">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+            
+        </form>
+    </div>
+</body>
+</html>

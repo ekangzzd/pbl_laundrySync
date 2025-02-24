@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="..\css\registration2_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form class="form" action="login.html" method="GET">
+             <img src="..\assets\images\logo.png" alt="Logo" class="logo">
+            <h2>Create an account</h2>
+            <p id="step-indicator">Step 2 of 3: Address Information</p>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-step completed"></div>
+                    <div class="progress-step"></div>
+                    <div class="progress-step"></div>
+                </div>
+            </div>
+
+        <div class="form-group">
+            <div class="address-group">
+                <div class="address-item">
+                    <label for="unit">Unit</label>
+                    <input type="text" id="unit" name="unit" class="input-field" required placeholder="Enter your unit number">
+                </div>
+
+                <div class="address-item">
+                    <label for="street">Street</label>
+                    <input type="text" id="street" name="street" class="input-field" required placeholder="Enter your street name">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="address-group">
+                <div class="address-item">
+                    <label for="barangay">Barangay</label>
+                    <input type="text" id="barangay" name="barangay" class="input-field" required placeholder="Enter your barangay">
+                </div>
+
+                <div class="address-item">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" class="input-field" required placeholder="Enter your city">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="region">Region</label>
+            <input type="text" id="region" name="region" class="input-field" required placeholder="Enter your region">
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" class="input-field" required placeholder="Enter your country">
+        </div>
+
+        <button type="button"><a href="registration3.html">Continue</a></button>
+        
+        </form>
+    </div>
+</body>
+</html>
