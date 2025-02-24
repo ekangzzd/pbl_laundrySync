@@ -83,12 +83,12 @@ button:hover {
 }
 
 button a {
-    color: #FFFFFF; /* Set the text color to white */
-    text-decoration: none; /* Remove the underline */
+    color: #FFFFFF;
+    text-decoration: none; 
 }
 
 button a:hover {
-    color: #FFFFFF; /* Keep the text white on hover */
+    color: #FFFFFF; 
 }
 
 .progress-container {
@@ -115,25 +115,23 @@ button a:hover {
     background-color: #FCB22D;
 }
 
-/* Flexbox layout for address fields */
 .address-group {
     display: flex;
     justify-content: space-between;
-    gap: 1rem; /* space between inputs */
+    gap: 1rem; 
 }
 
 .address-item {
-    flex: 1; /* makes each item flexible */
+    flex: 1;
 }
 
-/* Responsiveness for smaller screens */
 @media (max-width: 768px) {
     .address-group {
-        flex-direction: column; /* stack them on smaller screens */
+        flex-direction: column; 
     }
     
     .address-item {
-        margin-bottom: 1rem; /* space between stacked items */
+        margin-bottom: 1rem; 
     }
 }
 
