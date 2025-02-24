@@ -1,169 +1,68 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="../css/registration2_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form class="form" action="login.html" method="GET">
+             <img src="C:\xamppp\htdocs\LaundrySync\assets\images\logo.png" alt="Logo" class="logo">
+            <h2>Create an account</h2>
+            <p id="step-indicator">Step 2 of 3: Address Information</p>
 
-body {
-    background: url('../assets/images/laundry_bg.png') no-repeat center center/cover;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-step completed"></div>
+                    <div class="progress-step"></div>
+                    <div class="progress-step"></div>
+                </div>
+            </div>
 
-.logo {
-    display: block;
-    margin: 0 auto 1rem;
-    width: 200px;
-    height: auto;
-}
+        <div class="form-group">
+            <div class="address-group">
+                <div class="address-item">
+                    <label for="unit">Unit</label>
+                    <input type="text" id="unit" name="unit" class="input-field" required placeholder="Enter your unit number">
+                </div>
 
-.container {
-    background: #0170BF;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 500px;
-}
+                <div class="address-item">
+                    <label for="street">Street</label>
+                    <input type="text" id="street" name="street" class="input-field" required placeholder="Enter your street name">
+                </div>
+            </div>
+        </div>
 
-.form h2 {
-    text-align: center;
-    margin-bottom: 0.5rem;
-    color: #FFFFFF;
-}
+        <div class="form-group">
+            <div class="address-group">
+                <div class="address-item">
+                    <label for="barangay">Barangay</label>
+                    <input type="text" id="barangay" name="barangay" class="input-field" required placeholder="Enter your barangay">
+                </div>
 
-#step-indicator {
-    font-size: 13px;
-    color: #FFFFFF;
-    text-align: center;
-    margin-bottom: 0.7rem;
-}
+                <div class="address-item">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" class="input-field" required placeholder="Enter your city">
+                </div>
+            </div>
+        </div>
 
-.form-group {
-    margin-bottom: 1rem;
-}
+        <div class="form-group">
+            <label for="region">Region</label>
+            <input type="text" id="region" name="region" class="input-field" required placeholder="Enter your region">
+        </div>
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.2rem;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: 600;
-}
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" class="input-field" required placeholder="Enter your country">
+        </div>
 
-.input-field {
-    width: 100%;
-    height: 38px;
-    padding: 1.2rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background: white;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.7);
-}
-
-.input-field select {
-    cursor: pointer;
-}
-
-button {
-    width: 100%;
-    padding: 0.7rem;
-    background: #FCB22D;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 0.7rem;
-    transition: background 0.3s ease;
-}
-
-button:hover {
-    background: #a38348;
-}
-
-button a {
-    color: #FFFFFF; /* Set the text color to white */
-    text-decoration: none; /* Remove the underline */
-}
-
-button a:hover {
-    color: #FFFFFF; /* Keep the text white on hover */
-}
-
-.progress-container {
-    width: 100%;
-    margin-top: -0.2rem;
-    margin-bottom: 1rem;
-}
-
-.progress-bar {
-    display: flex;
-    height: 5px;
-    width: 100%;
-    border-radius: 5px;
-    background-color: lightgray;
-}
-
-.progress-step {
-    flex: 1;
-    background-color: lightgray;
-    border-radius: 5px;
-}
-
-.progress-step.completed {
-    background-color: #FCB22D;
-}
-
-/* Flexbox layout for address fields */
-.address-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem; /* space between inputs */
-}
-
-.address-item {
-    flex: 1; /* makes each item flexible */
-}
-
-/* Make sure labels don't overlap the inputs */
-.form-group label {
-    display: block;
-    margin-bottom: 0.2rem;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.input-field {
-    width: 100%;
-    height: 38px;
-    padding: 1.2rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background: white;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.7);
-}
-
-/* Responsiveness for smaller screens */
-@media (max-width: 768px) {
-    .address-group {
-        flex-direction: column; /* stack them on smaller screens */
-    }
-    
-    .address-item {
-        margin-bottom: 1rem; /* space between stacked items */
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        width: 95%;
-        padding: 1.5rem;
-    }
-}
+        <button type="button"><a href="Registration3.html">Continue</a></button>
+        
+        </form>
+    </div>
+</body>
+</html>
