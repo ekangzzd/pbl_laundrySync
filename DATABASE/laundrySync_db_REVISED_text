@@ -12,7 +12,7 @@ CREATE TABLE customer_tbl (
     region VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL,
     zipcode VARCHAR(10) NOT NULL,
-    contactEmail VARCHAR(100) NOT NULL,
+    contactEmail VARCHAR(100) NOT NULL UNIQUE,
     contactNumber VARCHAR(20) NOT NULL
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE customer_tbl (
 CREATE TABLE login_tbl (
     login_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    contactEmail VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
 );
