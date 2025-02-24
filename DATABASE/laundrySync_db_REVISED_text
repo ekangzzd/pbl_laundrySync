@@ -1,1 +1,180 @@
+-- Customer Table
+CREATE TABLE customer_tbl (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    fName VARCHAR(100) NOT NULL,
+    mName VARCHAR(100),
+    lName VARCHAR(100) NOT NULL,
+    suffix ENUM('Jr.', 'Sr.', 'II', 'III', 'IV') NULL,
+    unit VARCHAR(50),
+    street VARCHAR(100) NOT NULL,
+    barangay VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    region VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    zipcode VARCHAR(10) NOT NULL,
+    contactEmail VARCHAR(100) NOT NULL,
+    contactNumber VARCHAR(20) NOT NULL
+);
+
+-- Login Table
+CREATE TABLE login_tbl (
+    login_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
+);
+
+-- Notifications Table
+CREATE TABLE notifications_tbl (
+    notification_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('unread', 'read') DEFAULT 'unread',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
+);
+
+-- Laundry Order Status Table
+CREATE TABLE laundryOrderStatus_tbl (
+    status_id INT PRIMARY KEY AUTO_INCREMENT,
+    status_name VARCHAR(50) NOT NULL
+);
+
+-- Laundry Service Table
+CREATE TABLE laundryService_tbl (
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_name VARCHAR(100) NOT NULL,
+    service_desc TEXT
+);
+
+-- Wash Load Table
+CREATE TABLE washLoad_tbl (
+    washLoad_id INT PRIMARY KEY AUTO_INCREMENT,
+    size ENUM('small', 'medium', 'large') NOT NULL,
+    intensity ENUM('light', 'medium', 'heavy') NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price FLOAT NOT NULL
+);
+
+-- Dry Load Table
+CREATE TABLE dryLoad_tbl (
+    dryLoad_id INT PRIMARY KEY AUTO_INCREMENT,
+    size ENUM('medium', 'large') NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price FLOAT NOT NULL
+);
+
+-- Laundry Details Table
+CREATE TABLE laundryDetails_tbl (
+    details_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_id INT NOT NULL,
+    washIntensity_id INT NULL,
+    washSize_id INT NULL,
+    dryIntensity_id INT NULL,
+    drySize_id INT NULL,
+    FOREIGN KEY (service_id) REFERENCES laundryService_tbl(service_id) ON DELETE CASCADE,
+    FOREIGN KEY (washIntensity_id) REFERENCES washIntensity_tbl(washIntensity_id) ON DELETE CASCADE,
+    FOREIGN KEY (washSize_id) REFERENCES washLoad_tbl(washSize_id) ON DELETE CASCADE,
+    FOREIGN KEY (dryIntensity_id) REFERENCES dryIntensity_tbl(dryIntensity_id) ON DELETE CASCADE,
+    FOREIGN KEY (drySize_id) REFERENCES dryLoad_tbl(drySize_id) ON DELETE CASCADE
+);
+
+-- Laundry Order Table
+CREATE TABLE laundryOrder_tbl (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    details_id INT NOT NULL,
+    status_id INT NOT NULL,
+    orderDate DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (details_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
+);
+
+-- Payment Table
+CREATE TABLE payment_tbl (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    pickup_datetime DATETIME NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_method ENUM('cash', 'online') NOT NULL,
+    total_price FLOAT NOT NULL,
+    total_price_add FLOAT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id) ON DELETE CASCADE
+);
+
+-- Additional Payment Table
+CREATE TABLE additionalPayment_tbl (
+    addcharges_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    prev_wash_size_id INT,
+    new_wash_size_id INT,
+    prev_dry_size_id INT,
+    new_dry_size_id INT,
+    additional_fee FLOAT,
+    FOREIGN KEY (order_id) REFERENCES laundryOrder_tbl(order_id),
+    FOREIGN KEY (prev_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
+    FOREIGN KEY (new_wash_size_id) REFERENCES washLoad_tbl(washSize_id),
+    FOREIGN KEY (prev_dry_size_id) REFERENCES dryLoad_tbl(drySize_id),
+    FOREIGN KEY (new_dry_size_id) REFERENCES dryLoad_tbl(drySize_id)
+);
+
+-- Customer Inserts
+INSERT INTO customer_tbl (fName, mName, lName, suffix, unit, street, barangay, city, region, country, zipcode, contactEmail, contactNumber) VALUES
+('John', 'A.', 'Doe', NULL, '12A', 'Main St.', 'Barangay 1', 'Metro City', 'Region 1', 'CountryX', '1000', 'john.doe@email.com', '09123456789'),
+('Jane', 'B.', 'Smith', 'Jr.', '5B', '2nd Ave.', 'Barangay 2', 'Metro City', 'Region 1', 'CountryX', '1001', 'jane.smith@email.com', '09876543210');
+
+-- Login Inserts
+INSERT INTO login_tbl (customer_id, username, password_hash) VALUES
+(1, 'johndoe', 'hashedpassword1'),
+(2, 'janesmith', 'hashedpassword2');
+
+-- Notifications Inserts
+INSERT INTO notifications_tbl (customer_id, message, status) VALUES
+(1, 'Your laundry is ready for pickup.', 'unread'),
+(2, 'Your order has been received.', 'read');
+
+-- Laundry Order Status Inserts
+INSERT INTO laundryOrderStatus_tbl (status_name) VALUES
+('Pending'),
+('In Progress'),
+('Completed');
+
+-- Laundry Service Inserts
+INSERT INTO laundryService_tbl (service_name, service_desc) VALUES
+('Washing', 'Standard washing service'),
+('Dry Cleaning', 'Professional dry cleaning');
+
+-- Wash Load Inserts
+INSERT INTO washLoad_tbl (size, intensity, description, price) VALUES
+('small', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 60.00),
+('medium', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 85.00),
+('large', 'light', '1 Wash, 1 Rinse, 1 Spin. Total 21 minutes', 120.00),
+('small', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 70.00),
+('medium', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 95.00),
+('large', 'medium', '1 Wash, 2 Rinse, 1 Spin. Total 28 minutes', 130.00),
+('small', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 80.00),
+('medium', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 105.00),
+('large', 'heavy', '2 Wash, 2 Rinse, 1 Spin. Total 33 minutes', 140.00);
+
+-- Dry Load Inserts
+INSERT INTO dryLoad_tbl (size, description, price) VALUES
+('medium', 'Standard Drying', 65.00),
+('large', 'Standard Drying', 100.00);
+
+-- Laundry Order Inserts
+INSERT INTO laundryOrder_tbl (customer_id, details_id, status_id, orderDate) VALUES
+(1, 1, 1, '2025-02-24'),
+(2, 2, 2, '2025-02-24');
+
+-- Payment Inserts
+INSERT INTO payment_tbl (order_id, pickup_datetime, payment_date, payment_method, total_price, total_price_add) VALUES
+(1, '2025-02-24 14:00:00', '2025-02-24', 'cash', 20.00, 2.00),
+(2, '2025-02-24 16:00:00', '2025-02-24', 'online', 25.00, 3.00);
+
+-- Additional Payment Inserts
+INSERT INTO additionalPayment_tbl (order_id, prev_wash_size_id, new_wash_size_id, prev_dry_size_id, new_dry_size_id, additional_fee) VALUES
+(1, 1, 2, 3, 3, 2.00),
+(2, 2, 3, 1, 2, 3.00);
 
