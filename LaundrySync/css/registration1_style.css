@@ -105,13 +105,13 @@ button:hover {
     background: #a38348;
 }
 
-button a {
-    color: #FFFFFF; /* Set the text color to white */
-    text-decoration: none; /* Remove the underline */
+.register-link a {
+    color: #FCB22D;
+    transition: color 0.3s ease;
 }
 
-button a:hover {
-    color: #FFFFFF; /* Keep the text white on hover */
+.register-link a:hover {
+    color: #FCB22D;
 }
 
 .registration-link {
