@@ -105,6 +105,15 @@ button:hover {
     background: #a38348;
 }
 
+.register-link a {
+    color: #FCB22D;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #FCB22D;
+}
+
 .registration-link {
     text-align: center;
     margin-top: 1rem;
