@@ -83,7 +83,7 @@ CREATE TABLE laundryOrder_tbl (
     customer_id INT NOT NULL,
     details_id INT NOT NULL,
     status_id INT NOT NULL,
-    orderDate DATE NOT NULL,
+    orderDate DATE NOT NULL DEFAULT CURDATE(),
     FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (details_id) REFERENCES laundryDetails_tbl(details_id) ON DELETE CASCADE,
     FOREIGN KEY (status_id) REFERENCES laundryOrderStatus_tbl(status_id) ON DELETE CASCADE
