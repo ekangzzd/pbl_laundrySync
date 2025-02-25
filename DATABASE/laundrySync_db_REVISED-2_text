@@ -20,7 +20,7 @@ CREATE TABLE customer_tbl (
 
 -- Login Table (One-to-One Relationship with customer_tbl)
 CREATE TABLE login_tbl (
-    customer_id INT PRIMARY KEY, -- Acts as both primary and foreign key
+    customer_id INT PRIMARY KEY AUTO_INCREMENT, -- Acts as both primary and foreign key
     contactEmail VARCHAR(100) NOT NULL UNIQUE,
     passwordHash VARCHAR(255) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer_tbl(customer_id) ON DELETE CASCADE
@@ -114,9 +114,9 @@ INSERT INTO customer_tbl (fName, mName, lName, suffix, unit, street, barangay, c
 ('Jane', 'B.', 'Smith', 'Jr.', '5B', '2nd Ave.', 'Barangay 2', 'Metro City', 'Region 1', 'CountryX', '1001', 'jane.smith@email.com', '09876543210');
 
 -- Insert Login Credentials (Matching Existing Customers)
-INSERT INTO login_tbl (customer_id, contactEmail, passwordHash) VALUES
-(1, 'john.doe@email.com', 'hashedpassword1'),
-(2, 'jane.smith@email.com', 'hashedpassword2');
+INSERT INTO login_tbl (contactEmail, passwordHash) VALUES
+('john.doe@email.com', 'hashedpassword1'),
+('jane.smith@email.com', 'hashedpassword2');
 
 -- Notifications Inserts
 INSERT INTO notifications_tbl (customer_id, message, status) VALUES
